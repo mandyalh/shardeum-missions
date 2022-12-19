@@ -1,0 +1,49 @@
+pragma solidity ^0.6.0;
+
+contract TicTacToe {
+    // The board is represented as a one-dimensional array of integers.
+    // 0 represents an empty space, 1 represents a space occupied by player 1 (X),
+    // and 2 represents a space occupied by player 2 (O).
+    int[9] public board;
+
+    // The player whose turn it is. 1 for player 1 (X) and 2 for player 2 (O).
+    int public currentPlayer;
+
+    // The game's result. 0 for ongoing, 1 for player 1 (X) wins, 2 for player 2 (O) wins,
+    // and 3 for a tie.
+    int public result;
+
+    // Makes a move on the board.
+    function makeMove(uint index) public {
+        require(board[index] == 0, "Space is already occupied");
+        require(result == 0, "Game is already over");
+
+        board[index] = currentPlayer;
+        checkResult();
+        currentPlayer = (currentPlayer == 1) ? 2 : 1;
+    }
+
+    // Determines the result of the game based on the current board state.
+    function checkResult() private {
+        // Check rows.
+        for (uint i = 0; i < 3; i++) {
+            if (board[i * 3] == board[i * 3 + 1] && board[i * 3] == board[i * 3 + 2] && board[i * 3] != 0) {
+                result = board[i * 3];
+                return;
+            }
+        }
+
+        // Check columns.
+        for (uint i = 0; i < 3; i++) {
+            if (board[i] == board[i + 3] && board[i] == board[i + 6] && board[i] != 0) {
+                result = board[i];
+                return;
+            }
+        }
+
+        // Check diagonals.
+        if (board[0] == board[4] && board[0] == board[8] && board[0] != 0) {
+            result = board[0];
+            return;
+        }
+       
